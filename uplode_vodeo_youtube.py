@@ -1,41 +1,20 @@
-import os
-import google.auth
-import google.auth.transport.requests
-import google.oauth2.credentials
-import googleapiclient.discovery
-import googleapiclient.errors
+from gtts import gTTS
 
-def upload_video_to_youtube(video_file_path, title, description):
-    # Set up the YouTube API client
-    credentials, project = google.auth.default(scopes=["https://www.googleapis.com/auth/youtube.upload"])
-    youtube = googleapiclient.discovery.build("youtube", "v3", credentials=credentials)
+from googletrans import Translator
+# النص الذي تريد تحويله إلى صوت
 
-    # Create a video insert request with video metadata
-    request_body = {
-        "snippet": {
-            "title": title,
-            "description": description,
-            "tags": ["tag1", "tag2"]
-        },
-        "status": {
-            "privacyStatus": "private"
-        }
-    }
+with open('textSp.txt', 'r', encoding="utf-8") as file:
+    text = file.read()
+    print(text)
 
-    # Create a media upload request for the video file
-    media_file = googleapiclient.http.MediaFileUpload(video_file_path, chunksize=-1, resumable=True)
-    insert_request = youtube.videos().insert(part="snippet,status", body=request_body, media_body=media_file)
+# تحويل النص إلى ملف صوتي
+tts = gTTS(text=text, lang='ar')
+tts.save("assets\\hello.mp3")
 
-    # Upload the video and handle the API response
-    response = None
-    while response is None:
-        status, response = insert_request.next_chunk()
-        if status:
-            print(f"Uploaded {int(status.progress() * 100)}.")
-    print(f"Video ID '{response['id']}' was successfully uploaded.")
 
-if __name__ == "__main__":
-    video_file_path = "/path/to/video.mp4"
-    title = "My Uploaded Video"
-    description = "This is a description of my uploaded video."
-    upload_video_to_youtube(video_file_path, title, description)
+
+
+translator = Translator(service_urls=['translate.google.com'])
+text_to_translate = "مرحبا بك"
+translation = translator.translate(text_to_translate, dest='en')
+print(translation.text)
