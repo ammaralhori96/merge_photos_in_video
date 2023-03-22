@@ -14,6 +14,7 @@ tts.save("assets\\hello.mp3")
 
 
 
+
 translator = Translator(service_urls=['translate.google.com'])
 text_to_translate = "مرحبا بك"
 translation = translator.translate(text_to_translate, dest='en')

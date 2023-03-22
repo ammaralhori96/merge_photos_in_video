@@ -9,15 +9,16 @@ from PIL import ImageFont, ImageDraw, Image
 from gtts import gTTS
 import soundfile as sf
 import numpy as np
+from langdetect import detect
 
-def put_arabic_text(img, text, text_offset):
+def put_arabic_text(img, text, text_offset, textColor):
     reshaped_text = arabic_reshaper.reshape(text)
     bidi_text = get_display(reshaped_text) 
     fontpath = "assets\\arial.ttf" # <== https://www.freefontspro.com/14454/arial.ttf  
     font = ImageFont.truetype(fontpath, 32)
     img_pil = Image.fromarray(img)
     draw = ImageDraw.Draw(img_pil)
-    draw.text(text_offset,bidi_text, font = font)
+    draw.text(text_offset,bidi_text, font = font, fill=textColor,)
     return np.array(img_pil)
 
 def merging_sounds():
@@ -55,6 +56,74 @@ def merging_sounds():
 
     # حفظ الملف المدمج
     sf.write('assets\\mergingSoundd.mp3', combined_sound, samplerate)
+
+
+def smallImageUoutube(caverImage,text1, text2, text3,  ):
+ 
+
+    # فتح الصورة الأساسية (JPG)
+    base_image = Image.open("images\\"+ caverImage +".jpg")
+
+    # فتح الصورة التي سنضيفها فوق الصورة الأساسية (PNG)
+    overlay_image = Image.open("assets\\small image youtube caver.png")
+
+    # ضبط حجم الصورة التي سنضيفها فوق الصورة الأساسية
+    base_image = base_image.resize(overlay_image.size)
+
+    # وضع الصورة المتحركة فوق الصورة الأساسية
+    base_image.paste(overlay_image, (0, 0), overlay_image)
+
+    # حفظ الصورة الجديدة (يمكن تغيير الاسم والمسار حسب الحاجة)
+    base_image.save("output//caverImage.jpg", "JPEG")
+
+
+    # فتح الصورة الأساسية (JPG)
+    basee_image = Image.open("output//caverImage.jpg")
+
+    # إنشاء كائن ImageDraw للكتابة على الصورة
+    draw = ImageDraw.Draw(basee_image)
+
+
+
+
+
+    # تحديد نص الكتابة
+    language = detect(text1)
+    # تحديد لون النص (أسود)
+    #color = (255, 242, 0)
+    color = (255, 255, 255)
+
+    if language == "ar":
+        # تحديد موضع النص على الصورة (يمكن تعديل القيم حسب الحاجة)
+        position1 = (1350, 400)
+        position2= (1250, 600)
+        position3 = (1350, 800)
+        fontSize=150
+    else:
+         # تحديد موضع النص على الصورة (يمكن تعديل القيم حسب الحاجة)
+        position1 = (1250, 400)
+        position2= (1250, 600)
+        position3 = (1250, 800)
+        fontSize=120
+
+
+    reshaped_text1 = arabic_reshaper.reshape(text1)
+    reshaped_text2 = arabic_reshaper.reshape(text2)
+    reshaped_text3 = arabic_reshaper.reshape(text3)
+    bidi_text1 = get_display(reshaped_text1) 
+    bidi_text2 = get_display(reshaped_text2) 
+    bidi_text3 = get_display(reshaped_text3) 
+    fontpath = "assets\\arial.ttf" # <== https://www.freefontspro.com/14454/arial.ttf  
+    font = ImageFont.truetype(fontpath, fontSize)
+    draw.text(position1,bidi_text1, font = font,fill=color , stroke_fill= (0, 0, 0), stroke_width=5)
+    draw.text(position2,bidi_text2, font = font,fill=color, stroke_fill=(0, 0, 0), stroke_width=5)
+    draw.text(position3,bidi_text3, font = font,fill=color, stroke_fill= (0, 0, 0), stroke_width=5)
+
+    # حفظ الصورة الجديدة (يمكن تغيير الاسم والمسار حسب الحاجة)
+    basee_image.save("output//caverImage.jpg", "JPEG")
+
+#smallImageUoutube("Photo0", "المعركة", "الصليبية" , "الاسلامية",)
+smallImageUoutube("Photo0", "hello", "world" , "welcome", )
 
 
 newText=[]
@@ -151,14 +220,14 @@ for img_file in img_files:
     text_width = len(text) * 13
     font = cv2.FONT_HERSHEY_SCRIPT_SIMPLEX
     font_scale = 1
-    font_color = (255, 255, 255)
+    font_color = (0, 0, 0)
     thickness = 2
    
     text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
     #text_x = int((width - text_size[1]) / 2)
     text_x = int((width / 2 )- (text_width / 2))#int((img.shape[1] - (text_width / 2)) / 2)
     text_y = img.shape[0] - text_size[1] - 10
-    bg_color = (0, 0, 0)  # Green background color
+    bg_color = (255, 255, 255)  # Green background color
     w = text_width+ 30
     h = text_size[1] + 30
     # Draw the background rectangle
@@ -168,7 +237,7 @@ for img_file in img_files:
     # text_x = int((img.shape[1] + (text_width / 2)) / 2)
     #cv2.putText(img, text , (text_x, text_y), font, font_scale, font_color, thickness, cv2.LINE_AA)
     # img = put_arabic_text(img, text, (200, 450))
-    img = put_arabic_text(img, text, (text_x, 430))
+    img = put_arabic_text(img, text, (text_x, 430), font_color)
 
     # write the image to the video
     out.write(img)
