@@ -74,11 +74,11 @@ def smallImageUoutube(caverImage,text1, text2, text3,  ):
     base_image.paste(overlay_image, (0, 0), overlay_image)
 
     # حفظ الصورة الجديدة (يمكن تغيير الاسم والمسار حسب الحاجة)
-    base_image.save("output//caverImage.jpg", "JPEG")
+    base_image.save("caverImage//caverImage.jpg", "JPEG")
 
 
     # فتح الصورة الأساسية (JPG)
-    basee_image = Image.open("output//caverImage.jpg")
+    basee_image = Image.open("caverImage//caverImage.jpg")
 
     # إنشاء كائن ImageDraw للكتابة على الصورة
     draw = ImageDraw.Draw(basee_image)
@@ -169,12 +169,17 @@ with open('assets\\textSp.txt', 'r', encoding="utf-8") as file:
     text = file.read()
 
 
-
+language = detect(text)
 # تحويل النص إلى ملف صوتي
-tts = gTTS(text=text, lang='es', slow=True)
+if language == "ar":
+    tts = gTTS(text=text, lang=language, slow=False)
+    fps = 0.32
+else:
+    tts = gTTS(text=text, lang=language, slow=True)
+    fps = 0.4
 tts.save("assets\\hello.mp3")
 # set up video parameters
-fps = 0.4
+
 width = 480
 height = 480
 
@@ -198,7 +203,7 @@ print(img_files)
 
 # create a video writer object
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-out = cv2.VideoWriter('output\\output.mp4', fourcc, fps, (width, height))
+out = cv2.VideoWriter('assets\\output.mp4', fourcc, fps, (width, height))
 
 # loop over each image and add it to the video
 x=0
@@ -250,7 +255,7 @@ out.release()
 
 
 # Load the video and audio clips
-video = VideoFileClip('output\\output.mp4')
+video = VideoFileClip('assets\\output.mp4')
 audio = AudioFileClip('assets\\mergingSoundd.mp3')
 
 # Set the audio clip to the same duration as the video clip
