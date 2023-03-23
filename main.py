@@ -11,6 +11,10 @@ import soundfile as sf
 import numpy as np
 from langdetect import detect
 
+
+lang=["ar","en","fr","es"]
+titleCaver=[]
+titleYoutube=[]
 def put_arabic_text(img, text, text_offset, textColor):
     reshaped_text = arabic_reshaper.reshape(text)
     bidi_text = get_display(reshaped_text) 
@@ -62,7 +66,10 @@ def smallImageUoutube(caverImage,text1, text2, text3,  ):
  
 
     # فتح الصورة الأساسية (JPG)
-    base_image = Image.open("images\\"+ caverImage +".jpg")
+    try:
+        base_image = Image.open("images\\"+ caverImage +".jpg")
+    except:
+        base_image = Image.open("images\\"+ caverImage +".png")
 
     # فتح الصورة التي سنضيفها فوق الصورة الأساسية (PNG)
     overlay_image = Image.open("assets\\small image youtube caver.png")
@@ -72,9 +79,14 @@ def smallImageUoutube(caverImage,text1, text2, text3,  ):
 
     # وضع الصورة المتحركة فوق الصورة الأساسية
     base_image.paste(overlay_image, (0, 0), overlay_image)
+    try:
+        # حفظ الصورة الجديدة (يمكن تغيير الاسم والمسار حسب الحاجة)
+        base_image.save("caverImage//caverImage.jpg", "JPEG")
+    except:
+        rgb_im = base_image.convert('RGB')
+        rgb_im.save("caverImage//caverImage.jpg", "JPEG")
 
-    # حفظ الصورة الجديدة (يمكن تغيير الاسم والمسار حسب الحاجة)
-    base_image.save("caverImage//caverImage.jpg", "JPEG")
+
 
 
     # فتح الصورة الأساسية (JPG)
@@ -120,149 +132,184 @@ def smallImageUoutube(caverImage,text1, text2, text3,  ):
     draw.text(position3,bidi_text3, font = font,fill=color, stroke_fill= (0, 0, 0), stroke_width=5)
 
     # حفظ الصورة الجديدة (يمكن تغيير الاسم والمسار حسب الحاجة)
-    basee_image.save("output//caverImage.jpg", "JPEG")
+    basee_image.save("caverImage//"+languagee+".jpg", "JPEG")
+def titleHundling():
+    with open('titleDesc\\caverTitle.txt', 'r', encoding="utf-8") as file:
 
-#smallImageUoutube("Photo0", "المعركة", "الصليبية" , "الاسلامية",)
-smallImageUoutube("Photo0", "hello", "world" , "welcome", )
+        lines=file.readlines()
+        for line in lines:
+            lineSections=[]
+            word=""
+            x=0
+            for i in line:
+                if i != " " :
+                    word+=i
+                elif i == " ":
+                    lineSections.append(word)
+                    word=""
 
+                if x ==len(line)-1:
+                    lineSections.append(word)
+                    word=""
+                    if len(lineSections)==2:
+                        lineSections.append("")
+                    if len(lineSections)==1:
+                        lineSections.append("")
+                        lineSections.append("")
 
-newText=[]
-with open('assets\\textSp.txt', 'r', encoding="utf-8") as file:
-    nymperfound=25
-    z=0
-    n=0
-    u=file.read()
-    u = u.replace("\n", " " )
-    print(u)
+                    titleCaver.append(lineSections)
+                x+=1
 
-    line = u.strip()
-      
-    #print("ssss")
-    for i in range(0, len(line)):
-        marks=[",","،",".","?",":","!",";","؛",] 
-        if (i >=z+nymperfound and line[i] ==" ") or (i >=z and line[i] in marks) :
-            n=i
+    with open('titleDesc\\youtubeTitle.txt', 'r', encoding="utf-8") as file:
 
-        if n>z:
-            #print(n)
-            newText.append(line[z:n])
-            #print(line[z:n])
-            z=n
-            if (z +nymperfound>=len(line)) and (line[z+2:len(line)-2] not in line[len(line)-30:len(line)]  ):
-                # print(line[z+4:len(line)-4] not in newText[len(newText)-1])
-                # print(newText[len(newText)-1])
-                # print(line[z+4:len(line)-4])
-                newText.append(line[z:len(line)])
-    
-    if len(newText)!=0:
-        with open('assets\\textSp.txt', 'w', encoding="utf-8") as filee:
-            #print("hhhhhh")
-            # كتابة السطور المقطوعة في الملف الجديد
-            for line in newText:
-                filee.write(line + '\n')
-    else :
-        newText=u
-    
-            
-
-with open('assets\\textSp.txt', 'r', encoding="utf-8") as file:
-    text = file.read()
-
-
-language = detect(text)
-# تحويل النص إلى ملف صوتي
-if language == "ar":
-    tts = gTTS(text=text, lang=language, slow=False)
-    fps = 0.32
-else:
-    tts = gTTS(text=text, lang=language, slow=True)
-    fps = 0.4
-tts.save("assets\\hello.mp3")
-# set up video parameters
-
-width = 480
-height = 480
-
-merging_sounds()
-# specify the path to your images
-img_dir = 'images'
-
-# get a list of all the image file names
-img_files = sorted([f for f in os.listdir(img_dir) if f.endswith('.jpg')])
+        lines=file.readlines()
+        for line in lines:
+            titleYoutube.append(line)
  
+                
+titleHundling()
+for i in range(len(lang)):
+    languagee=lang[i]
+    #smallImageUoutube("Photo0", "المعركة", "الصليبية" , "الاسلامية",)
+    smallImageUoutube("3", titleCaver[i][0], titleCaver[i][1] , titleCaver[i][2], )
 
-while len(img_files) < len(newText):
-    x=len(newText)-len(img_files)
-    img_files= img_files+ img_files[0:x]
-    print(x)
-print("newText " +str(len(newText)))
-print("img_files "+str(len(img_files)))
-print("img_files")
-print(img_files)
+    newText=[]
+    with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file:
+        nymperfound=25
+        z=0
+        n=0
+        u=file.read()
+        u = u.replace("\n", " " )
+        #print(u)
+
+        line = u.strip()
+        
+        #print("ssss")
+        for i in range(0, len(line)):
+            marks=[",","،",".","?",":","!",";","؛",] 
+            if (i >=z+nymperfound and line[i] ==" ") or (i >=z and line[i] in marks) :
+                n=i
+
+            if n>z:
+                #print(n)
+                newText.append(line[z:n])
+                #print(line[z:n])
+                z=n
+                if (z +nymperfound>=len(line)) and (line[z+2:len(line)-2] not in line[len(line)-30:len(line)]  ):
+                    # print(line[z+4:len(line)-4] not in newText[len(newText)-1])
+                    # print(newText[len(newText)-1])
+                    # print(line[z+4:len(line)-4])
+                    newText.append(line[z:len(line)])
+        
+        if len(newText)!=0:
+            with open('titleDesc\\'+languagee+'.txt', 'w', encoding="utf-8") as filee:
+                #print("hhhhhh")
+                # كتابة السطور المقطوعة في الملف الجديد
+                for line in newText:
+                    filee.write(line + '\n')
+        else :
+            newText=u
+        
+                
+
+    with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file:
+        text = file.read()
 
 
-# create a video writer object
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-out = cv2.VideoWriter('assets\\output.mp4', fourcc, fps, (width, height))
-
-# loop over each image and add it to the video
-x=0
-for img_file in img_files:
-    # read the image file
-    img = cv2.imread(os.path.join(img_dir, img_file))
-    # resize the image to fit the video frame
-    img = cv2.resize(img, (width, height))
-
-    # add text to the image
-    #text = img_file
-    #text="سيشلبيبياش  لبيبياش نمنمنمن"
-    #text="mucó mucó  é ç  ê â  î ô û"
-    if x < len(newText):
-        text= newText[x]
+    language = detect(text)
+    # تحويل النص إلى ملف صوتي
+    if languagee == "ar":
+        tts = gTTS(text=text, lang=language, slow=False)
+        fps = 0.33
     else:
-        text= newText[len(newText)-1]
-    #text= "é, è, ê, ë, à, â, ô, î, ï, û, ç, œ. ñ, ü, á, é, í, ó, ú, ¿, ¡."
-    text_width = len(text) * 13
-    font = cv2.FONT_HERSHEY_SCRIPT_SIMPLEX
-    font_scale = 1
-    font_color = (0, 0, 0)
-    thickness = 2
-   
-    text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
-    #text_x = int((width - text_size[1]) / 2)
-    text_x = int((width / 2 )- (text_width / 2))#int((img.shape[1] - (text_width / 2)) / 2)
-    text_y = img.shape[0] - text_size[1] - 10
-    bg_color = (255, 255, 255)  # Green background color
-    w = text_width+ 30
-    h = text_size[1] + 30
-    # Draw the background rectangle
-    cv2.rectangle(img, (text_x,text_y-25), (text_x+w , text_y-10 + h), bg_color, -1)
+        tts = gTTS(text=text, lang=language, slow=True)
+        fps = 0.4
+    tts.save("assets\\hello.mp3")
+    # set up video parameters
+
+    width = 480
+    height = 480
+
+    merging_sounds()
+    # specify the path to your images
+    img_dir = 'images'
+
+    # get a list of all the image file names
+    img_files = sorted([f for f in os.listdir(img_dir) if f.endswith('.jpg')])
+    if len(img_files)==0:
+         img_files = sorted([f for f in os.listdir(img_dir) if f.endswith('.png')])
+
+    if len(img_files) < len(newText):
+        x=len(newText)-len(img_files)
+        img_files= img_files+ img_files[0:x]
+    print("newText " +str(len(newText)))
+    print("img_files "+str(len(img_files)))
+    print("img_files")
+    #print(img_files)
+
+
+    # create a video writer object
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter('assets\\output.mp4', fourcc, fps, (width, height))
+
+    # loop over each image and add it to the video
+    x=0
+    for img_file in img_files:
+        # read the image file
+        img = cv2.imread(os.path.join(img_dir, img_file))
+        # resize the image to fit the video frame
+        img = cv2.resize(img, (width, height))
+
+        # add text to the image
+        #text = img_file
+        #text="سيشلبيبياش  لبيبياش نمنمنمن"
+        #text="mucó mucó  é ç  ê â  î ô û"
+        if x < len(newText):
+            text= newText[x]
+        else:
+            text= newText[len(newText)-1]
+        #text= "é, è, ê, ë, à, â, ô, î, ï, û, ç, œ. ñ, ü, á, é, í, ó, ú, ¿, ¡."
+        text_width = len(text) * 13
+        font = cv2.FONT_HERSHEY_SCRIPT_SIMPLEX
+        font_scale = 1
+        font_color = (0, 0, 0)
+        thickness = 2
     
-    # text_x = int((img.shape[1]) / 2) + int(text_size[0] / 2)
-    # text_x = int((img.shape[1] + (text_width / 2)) / 2)
-    #cv2.putText(img, text , (text_x, text_y), font, font_scale, font_color, thickness, cv2.LINE_AA)
-    # img = put_arabic_text(img, text, (200, 450))
-    img = put_arabic_text(img, text, (text_x, 430), font_color)
+        text_size = cv2.getTextSize(text, font, font_scale, thickness)[0]
+        #text_x = int((width - text_size[1]) / 2)
+        text_x = int((width / 2 )- (text_width / 2))#int((img.shape[1] - (text_width / 2)) / 2)
+        text_y = img.shape[0] - text_size[1] - 10
+        bg_color = (255, 255, 255)  # Green background color
+        w = text_width+ 30
+        h = text_size[1] + 30
+        # Draw the background rectangle
+        cv2.rectangle(img, (text_x,text_y-25), (text_x+w , text_y-10 + h), bg_color, -1)
+        
+        # text_x = int((img.shape[1]) / 2) + int(text_size[0] / 2)
+        # text_x = int((img.shape[1] + (text_width / 2)) / 2)
+        #cv2.putText(img, text , (text_x, text_y), font, font_scale, font_color, thickness, cv2.LINE_AA)
+        # img = put_arabic_text(img, text, (200, 450))
+        img = put_arabic_text(img, text, (text_x, 430), font_color)
 
-    # write the image to the video
-    out.write(img)
-    x+=1
+        # write the image to the video
+        out.write(img)
+        x+=1
 
-    
+        
 
-# release the video writer object
-out.release()
+    # release the video writer object
+    out.release()
 
 
-# Load the video and audio clips
-video = VideoFileClip('assets\\output.mp4')
-audio = AudioFileClip('assets\\mergingSoundd.mp3')
+    # Load the video and audio clips
+    video = VideoFileClip('assets\\output.mp4')
+    audio = AudioFileClip('assets\\mergingSoundd.mp3')
 
-# Set the audio clip to the same duration as the video clip
-audio = audio.set_duration(video.duration)
+    # Set the audio clip to the same duration as the video clip
+    audio = audio.set_duration(video.duration)
 
-# Concatenate the video clip and audio clip
-final_clip = video.set_audio(audio)
+    # Concatenate the video clip and audio clip
+    final_clip = video.set_audio(audio)
 
-# Write the final clip to a new file
-final_clip.write_videofile("output\\video_with_sound.mp4")
+    # Write the final clip to a new file
+    final_clip.write_videofile("output\\"+languagee+".mp4")
