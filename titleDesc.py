@@ -1,11 +1,33 @@
 
 from googletrans import Translator
-
+import os
 lang=["ar","en","fr","es"]
 
 
 titleUser=input("Enter title: ")
 
+def reanameFilesImage():
+    path = 'images'
+    # الحصول على قائمة بأسماء جميع الملفات داخل المجلد
+    files = os.listdir(path)
+
+    # بدء العدد من 1
+    i = 1
+
+    # حلقة تكرارية لإعادة تسمية الملفات
+    for file_name in files:
+        # الحصول على المسار الكامل للملف
+        file_path = os.path.join(path, file_name)
+        
+        # إعادة تسمية الملف باستخدام رقم فريد
+        new_file_name = str(i) + ".jpg"
+        new_file_path = os.path.join(path, new_file_name)
+        os.rename(file_path, new_file_path)
+        
+        # زيادة العدد بمقدار واحد
+        i += 1
+
+reanameFilesImage()
 #############title################### 
 translator = Translator()
 for i in range(len(lang)):
@@ -43,4 +65,8 @@ with open('titleDesc\\textSp.txt', 'r', encoding="utf-8") as file:
 
             filee.write(translated_text.text)
 
+
+
+os.startfile('titleDesc\\caverTitle.txt')
+os.startfile('titleDesc\\youtubeTitle.txt')
 

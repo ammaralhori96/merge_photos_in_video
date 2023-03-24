@@ -12,6 +12,7 @@ import numpy as np
 from langdetect import detect
 
 
+#lang=["ar","en","fr","es"]
 lang=["ar","en","fr","es"]
 titleCaver=[]
 titleYoutube=[]
@@ -81,16 +82,16 @@ def smallImageUoutube(caverImage,text1, text2, text3,  ):
     base_image.paste(overlay_image, (0, 0), overlay_image)
     try:
         # حفظ الصورة الجديدة (يمكن تغيير الاسم والمسار حسب الحاجة)
-        base_image.save("caverImage//caverImage.jpg", "JPEG")
+        base_image.save("assets//caverImage.jpg", "JPEG")
     except:
         rgb_im = base_image.convert('RGB')
-        rgb_im.save("caverImage//caverImage.jpg", "JPEG")
+        rgb_im.save("assets//caverImage.jpg", "JPEG")
 
 
 
 
     # فتح الصورة الأساسية (JPG)
-    basee_image = Image.open("caverImage//caverImage.jpg")
+    basee_image = Image.open("assets//caverImage.jpg")
 
     # إنشاء كائن ImageDraw للكتابة على الصورة
     draw = ImageDraw.Draw(basee_image)
@@ -113,10 +114,10 @@ def smallImageUoutube(caverImage,text1, text2, text3,  ):
         fontSize=150
     else:
          # تحديد موضع النص على الصورة (يمكن تعديل القيم حسب الحاجة)
-        position1 = (1250, 400)
-        position2= (1250, 600)
-        position3 = (1250, 800)
-        fontSize=120
+        position1 = (1200, 400)
+        position2= (1200, 600)
+        position3 = (1200, 800)
+        fontSize=105
 
 
     reshaped_text1 = arabic_reshaper.reshape(text1)
@@ -171,18 +172,18 @@ titleHundling()
 for i in range(len(lang)):
     languagee=lang[i]
     #smallImageUoutube("Photo0", "المعركة", "الصليبية" , "الاسلامية",)
-    smallImageUoutube("3", titleCaver[i][0], titleCaver[i][1] , titleCaver[i][2], )
+    smallImageUoutube("0", titleCaver[i][0], titleCaver[i][1] , titleCaver[i][2], )
 
     newText=[]
     with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file:
         nymperfound=25
         z=0
         n=0
-        u=file.read()
-        u = u.replace("\n", " " )
+        line=file.read()
+        line = line.replace("\n", " " )
         #print(u)
 
-        line = u.strip()
+        #line = u.strip()
         
         #print("ssss")
         for i in range(0, len(line)):
@@ -192,7 +193,10 @@ for i in range(len(lang)):
 
             if n>z:
                 #print(n)
-                newText.append(line[z:n])
+                
+                lineE=line[z:n].strip()
+                if lineE != '':
+                    newText.append(lineE)
                 #print(line[z:n])
                 z=n
                 if (z +nymperfound>=len(line)) and (line[z+2:len(line)-2] not in line[len(line)-30:len(line)]  ):
@@ -200,15 +204,22 @@ for i in range(len(lang)):
                     # print(newText[len(newText)-1])
                     # print(line[z+4:len(line)-4])
                     newText.append(line[z:len(line)])
-        
+        #ازالة الفراغات
+        # for item in newText:
+        #     if not item.isalnum():
+        #         newText.remove(item)
+
         if len(newText)!=0:
             with open('titleDesc\\'+languagee+'.txt', 'w', encoding="utf-8") as filee:
                 #print("hhhhhh")
                 # كتابة السطور المقطوعة في الملف الجديد
                 for line in newText:
-                    filee.write(line + '\n')
+                    line=line.strip()
+                    if line != '':
+                        filee.write(line + '\n')
+                        
         else :
-            newText=u
+            newText=line
         
                 
 
@@ -216,12 +227,22 @@ for i in range(len(lang)):
         text = file.read()
 
 
-    language = detect(text)
+    
     # تحويل النص إلى ملف صوتي
     if languagee == "ar":
-        tts = gTTS(text=text, lang=language, slow=False)
+        tts = gTTS(text=text, lang="ar", slow=False)
         fps = 0.33
+    elif languagee == "en":
+        tts = gTTS(text=text, lang="en", slow=True)
+        fps = 0.44
+    elif languagee == "fr":
+        tts = gTTS(text=text, lang="fr", slow=True)
+        fps = 0.4
+    elif languagee == "es":
+        tts = gTTS(text=text, lang="es", slow=False)
+        fps = 0.41
     else:
+        language = detect(text)
         tts = gTTS(text=text, lang=language, slow=True)
         fps = 0.4
     tts.save("assets\\hello.mp3")
@@ -235,16 +256,18 @@ for i in range(len(lang)):
     img_dir = 'images'
 
     # get a list of all the image file names
-    img_files = sorted([f for f in os.listdir(img_dir) if f.endswith('.jpg')])
-    if len(img_files)==0:
-         img_files = sorted([f for f in os.listdir(img_dir) if f.endswith('.png')])
+    img_files = sorted([f for f in os.listdir(img_dir)])
+    # if len(img_files)==0:
+    #      img_files = sorted([f for f in os.listdir(img_dir) if f.endswith('.png')])
 
-    if len(img_files) < len(newText):
+    while len(img_files) < len(newText):
         x=len(newText)-len(img_files)
+        print("x = "  + str(x))
         img_files= img_files+ img_files[0:x]
+        print("img_files "+str(len(img_files)))
     print("newText " +str(len(newText)))
     print("img_files "+str(len(img_files)))
-    print("img_files")
+    #print("img_files")
     #print(img_files)
 
 
@@ -268,6 +291,7 @@ for i in range(len(lang)):
             text= newText[x]
         else:
             text= newText[len(newText)-1]
+        
         #text= "é, è, ê, ë, à, â, ô, î, ï, û, ç, œ. ñ, ü, á, é, í, ó, ú, ¿, ¡."
         text_width = len(text) * 13
         font = cv2.FONT_HERSHEY_SCRIPT_SIMPLEX
