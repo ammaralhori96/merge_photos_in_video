@@ -4,7 +4,8 @@ import os
 lang=["ar","en","fr","es"]
 
 
-titleUser=input("Enter title: ")
+titleUser=str(input("Enter title: "))
+renameUser=input("rename image files y or n ")
 
 def reanameFilesImage():
     path = 'images'
@@ -26,8 +27,10 @@ def reanameFilesImage():
         
         # زيادة العدد بمقدار واحد
         i += 1
+    os.startfile('images')
 
-reanameFilesImage()
+if renameUser == "y" :
+    reanameFilesImage()
 #############title################### 
 translator = Translator()
 for i in range(len(lang)):
@@ -53,7 +56,7 @@ for i in range(len(lang)):
     
 
 #############Discriotion###################        
-with open('titleDesc\\textSp.txt', 'r', encoding="utf-8") as file:
+with open('textSp.txt', 'r', encoding="utf-8") as file:
     text=file.read()
     #text = text.replace("\n", " " )
 
@@ -69,4 +72,5 @@ with open('titleDesc\\textSp.txt', 'r', encoding="utf-8") as file:
 
 os.startfile('titleDesc\\caverTitle.txt')
 os.startfile('titleDesc\\youtubeTitle.txt')
+os.startfile('images\\')
 

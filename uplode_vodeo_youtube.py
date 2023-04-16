@@ -45,8 +45,8 @@ with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file:
 
 # print(titels)
 # print(desc)
-# time.sleep(10)
-# send_keys(desc, with_spaces=True, with_tabs=True, with_newlines=True, pause=0.03)
+#time.sleep(10)
+#send_keys(desc, with_spaces=True, with_tabs=True, with_newlines=True, pause=0.02)
 def uplodeVideo(videoXY):
     time.sleep(10)
     pyautogui.click(190,119)
@@ -57,13 +57,13 @@ def uplodeVideo(videoXY):
     time.sleep(1)
     pyautogui.click(1021,275) # مربع المجلد
     time.sleep(1)
-    send_keys("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\output", pause=0.03)
+    send_keys("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\output", pause=0.02)
     #pyautogui.write("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\output")
     time.sleep(3)
     pyautogui.press("Enter")
     time.sleep(3)
     pyautogui.doubleClick(videoXY) # اختيار القيديو 
-    time.sleep(30)
+    time.sleep(15)
     pyautogui.click(1200,425)
     time.sleep(1)
     pyautogui.scroll(-200)
@@ -72,7 +72,7 @@ def uplodeVideo(videoXY):
     time.sleep(1)
     pyautogui.click(1021,275) # مربع المجلد
     time.sleep(1)
-    send_keys("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\caverImage", pause=0.03)
+    send_keys("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\caverImage", pause=0.02)
     #pyautogui.write("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\caverImage")
     time.sleep(3)
     pyautogui.press("Enter")
@@ -86,13 +86,13 @@ def uplodeVideo(videoXY):
     pyautogui.doubleClick(1441,448)
     #pyautogui.hotkey('ctrl', 'a')
     time.sleep(3)
-    send_keys(titels[langUser],with_spaces=True, with_tabs=True, with_newlines=True, pause=0.03)#العنوان
+    send_keys(titels[langUser],with_spaces=True, with_tabs=True, with_newlines=True, pause=0.02)#العنوان
     
     time.sleep(4)
     pyautogui.click(1300,600)
     time.sleep(3)
-    send_keys(desc, with_spaces=True, with_tabs=True, with_newlines=True, pause=0.03)#وصف
-    time.sleep(30)
+    send_keys(desc, with_spaces=True, with_tabs=True, with_newlines=True, pause=0.02)#وصف
+    time.sleep(90)
     pyautogui.click(373,926) #التالي
     time.sleep(1)
     pyautogui.click(1450,745) #ليس مخصص للاطفال
