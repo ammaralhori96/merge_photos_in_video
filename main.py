@@ -4,7 +4,6 @@ import os
 from moviepy.editor import VideoFileClip, AudioFileClip, concatenate_videoclips
 import arabic_reshaper
 from bidi.algorithm import get_display
-import numpy as np
 from PIL import ImageFont, ImageDraw, Image
 from gtts import gTTS
 import soundfile as sf
@@ -16,13 +15,14 @@ backSoundName=["The-Four-Seasons",]
 backSoundNam=backSoundName[0]
 #lang=["ar","en","fr","es"]
 lang=["ar","en","fr","es"]
+fontSize=25
 titleCaver=[]
 titleYoutube=[]
 def put_arabic_text(img, text, text_offset, textColor):
     reshaped_text = arabic_reshaper.reshape(text)
     bidi_text = get_display(reshaped_text) 
     fontpath = "assets\\arial.ttf" # <== https://www.freefontspro.com/14454/arial.ttf  
-    font = ImageFont.truetype(fontpath, 32)
+    font = ImageFont.truetype(fontpath, fontSize)
     img_pil = Image.fromarray(img)
     draw = ImageDraw.Draw(img_pil)
     draw.text(text_offset,bidi_text, font = font, fill=textColor,)
@@ -149,6 +149,7 @@ def titleHundling():
             titleYoutube.append(line)
  
 videoTypeUser=int(input("enter video voice(0) writing(1) voice+writing(2): "))                
+DescHunflerUser=str(input("desc hundling y or n: "))                
 titleHundling()
 # for i in range(len(lang)):
 #     languagee=lang[i]
@@ -160,54 +161,60 @@ for i in range(len(lang)):
     smallImageUoutube("0", titleCaver[i], )
 
     newText=[]
-    if videoTypeUser != 0:
-        with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file:
-            nymperfound=25
-            z=0
-            n=0
-            line=file.read()
-            line = line.replace("\n", " " )
-            #print(u)
+    if DescHunflerUser == "y":
+        if videoTypeUser != 0:
+            with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file:
+                nymperfound=25
+                z=0
+                n=0
+                line=file.read()
+                line = line.replace("\n", " " )
+                #print(u)
 
-            #line = u.strip()
-            
-            #print("ssss")
-            for i in range(0, len(line)):
-                marks=[",","،",".","?",":","!",";","؛",] 
-                if (i >=z+nymperfound and line[i] ==" ") or (i >=z and line[i] in marks) :
-                    n=i
-
-                if n>z:
-                    #print(n)
-                    
-                    lineE=line[z:n].strip()
-                    if lineE != '':
-                        newText.append(lineE)
-                    #print(line[z:n])
-                    z=n
-                    if (z +nymperfound>=len(line)) and (line[z+2:len(line)-2] not in line[len(line)-30:len(line)]  ):
-                        # print(line[z+4:len(line)-4] not in newText[len(newText)-1])
-                        # print(newText[len(newText)-1])
-                        # print(line[z+4:len(line)-4])
-                        newText.append(line[z:len(line)])
-            #ازالة الفراغات
-            # for item in newText:
-            #     if not item.isalnum():
-            #         newText.remove(item)
-
-            if len(newText)!=0:
-                with open('titleDesc\\'+languagee+'.txt', 'w', encoding="utf-8") as filee:
-                    #print("hhhhhh")
-                    # كتابة السطور المقطوعة في الملف الجديد
-                    for line in newText:
-                        line=line.strip()
-                        if line != '':
-                            filee.write(line + '\n')
-                            
-            else :
-                newText=line
-            
+                #line = u.strip()
                 
+                #print("ssss")
+                for i in range(0, len(line)):
+                    marks=[",","،",".","?",":","!",";","؛",] 
+                    if (i >=z+nymperfound and line[i] ==" ") or (i >=z and line[i] in marks) :
+                        n=i
+
+                    if n>z:
+                        #print(n)
+                        
+                        lineE=line[z:n].strip()
+                        if lineE != '':
+                            newText.append(lineE)
+                        #print(line[z:n])
+                        z=n
+                        if (z +nymperfound>=len(line)) and (line[z+2:len(line)-2] not in line[len(line)-30:len(line)]  ):
+                            # print(line[z+4:len(line)-4] not in newText[len(newText)-1])
+                            # print(newText[len(newText)-1])
+                            # print(line[z+4:len(line)-4])
+                            newText.append(line[z:len(line)])
+                #ازالة الفراغات
+                # for item in newText:
+                #     if not item.isalnum():
+                #         newText.remove(item)
+
+                if len(newText)!=0:
+                    with open('titleDesc\\'+languagee+'.txt', 'w', encoding="utf-8") as filee:
+                        #print("hhhhhh")
+                        # كتابة السطور المقطوعة في الملف الجديد
+                        for line in newText:
+                            line=line.strip()
+                            if line != '':
+                                filee.write(line + '\n')
+                                
+                else :
+                    newText=line
+                
+    if DescHunflerUser != "y":
+        with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as filee:
+            newText=filee.readlines()
+            # for line in filee.readlines():
+            #     newText.append(line)
+
 
     with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file:
         text = file.read()
@@ -333,16 +340,16 @@ for i in range(len(lang)):
             text_x = int((width / 2 )- (text_width / 2))#int((img.shape[1] - (text_width / 2)) / 2)
             text_y = img.shape[0] - text_size[1] - 10
             bg_color = (255, 255, 255)  # Green background color
-            w = text_width+ 30
+            w = text_width -70
             h = text_size[1] + 30
             # Draw the background rectangle
-            cv2.rectangle(img, (text_x,text_y-25), (text_x+w , text_y-10 + h), bg_color, -1)
+            cv2.rectangle(img, (10,text_y-10), (text_x+w , text_y + h), bg_color, -1)
             
             # text_x = int((img.shape[1]) / 2) + int(text_size[0] / 2)
             # text_x = int((img.shape[1] + (text_width / 2)) / 2)
             #cv2.putText(img, text , (text_x, text_y), font, font_scale, font_color, thickness, cv2.LINE_AA)
             # img = put_arabic_text(img, text, (200, 450))
-            img = put_arabic_text(img, text, (text_x, 430), font_color)
+            img = put_arabic_text(img, text, (10, 445), font_color)
 
         # write the image to the video
         out.write(img)

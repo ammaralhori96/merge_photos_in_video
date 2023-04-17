@@ -59,11 +59,11 @@ for i in range(len(lang)):
 with open('textSp.txt', 'r', encoding="utf-8") as file:
     text=file.read()
     #text = text.replace("\n", " " )
-
+    print(text)
     translator = Translator()
     for i in range(len(lang)):
         translated_text = translator.translate(text, dest=lang[i])
-
+        print(translated_text)
         with open('titleDesc\\'+lang[i]+'.txt', 'w', encoding="utf-8") as filee:
 
             filee.write(translated_text.text)
