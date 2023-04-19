@@ -1,3 +1,4 @@
+import os
 import cv2
 import numpy as np
 from moviepy.editor import VideoFileClip,AudioFileClip, concatenate_videoclips
@@ -5,18 +6,37 @@ import arabic_reshaper
 from PIL import ImageFont, ImageDraw, Image
 from bidi.algorithm import get_display
 import soundfile as sf
-import math
-
+import time
 fbsNumper=100
-texti = ["مرحبا بكم","This is a test message.","Goodbye!"]
+from moviepy.editor import VideoFileClip, AudioFileClip, CompositeVideoClip
+
 backSoundName=["The-Four-Seasons",]
 backSoundNam=backSoundName[0]
 fontSize=30
-
 soundUser=str(input("video sound  y or n: "))  
 
+
+with open('textSp.txt', 'r', encoding="utf-8") as filee:
+            texti = filee.readlines()
+def reanameFilesImage():
+    path = 'videos'
+    # الحصول على قائمة بأسماء جميع الملفات داخل المجلد
+    files = os.listdir(path)
+
+
+    # حلقة تكرارية لإعادة تسمية الملفات
+    for file_name in files:
+        # الحصول على المسار الكامل للملف
+        file_path = os.path.join(path, file_name)
+        
+        # إعادة تسمية الملف باستخدام رقم فريد
+        new_file_name = "video.mp4"
+        new_file_path = os.path.join(path, new_file_name)
+        os.rename(file_path, new_file_path)
+reanameFilesImage()
+exec(open('addingIcon.py', encoding='utf-8').read())
 # Load video
-video_path = "videos\\video.mp4"
+video_path = 'output\\video.mp4'
 audio = AudioFileClip(video_path)
 video = VideoFileClip(video_path)
 
@@ -33,9 +53,13 @@ def put_arabic_text(img, text, text_offset, textColor):
 
 cap = cv2.VideoCapture(video_path)
 
+
 # Get video dimensions
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+
+
 #print(height)
 fps = int(cap.get(cv2.CAP_PROP_FPS))
 
@@ -111,14 +135,14 @@ while True:
 cap.release()
 out.release()
 
-from moviepy.editor import VideoFileClip, AudioFileClip, CompositeVideoClip
+
 
 
 # قراءة الفيديو والحفاظ على مقاساته
 video = VideoFileClip("assets\\output.mp4")
 if soundUser == "y":
     # قراءة الملف الصوتي الأصلي
-    audio = AudioFileClip(video_path)
+    audio = AudioFileClip('videos\\video.mp4')
     
     
 else:
@@ -156,7 +180,11 @@ else:
     sf.write(output_file, sound2, samplerateu)
     audio = AudioFileClip("assets\\finalSound.mp3")
     # دمج الفيديو والصوت
-    final_clip = CompositeVideoClip([video.set_audio(audio)])
+final_clip = CompositeVideoClip([video.set_audio(audio)])
 
 # حفظ الفيديو مع الصوت الأصلي وحفاظ على مقاساته
 final_clip.write_videofile("output\\video.mp4", codec='libx264', audio_codec='aac', fps=video.fps)
+
+
+
+

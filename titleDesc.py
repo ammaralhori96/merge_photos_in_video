@@ -1,11 +1,13 @@
 
 from googletrans import Translator
 import os
+from PIL import Image
 lang=["ar","en","fr","es"]
 
 
 titleUser=str(input("Enter title: "))
 renameUser=input("rename image files y or n ")
+iconUser=input("add icon  y or n ")
 
 def reanameFilesImage():
     path = 'images'
@@ -29,8 +31,35 @@ def reanameFilesImage():
         i += 1
     os.startfile('images')
 
+def addingIconImage():
+    path = 'images'
+    iconImage = Image.open('assets\\icon480.png')
+    # الحصول على قائمة بأسماء جميع الملفات داخل المجلد
+    files = os.listdir(path)
+
+    # بدء العدد من 1
+    i = 1
+
+    # حلقة تكرارية لإعادة تسمية الملفات
+    for file_name in files:
+        # الحصول على المسار الكامل للملف
+        file_path = os.path.join(path, file_name)
+        image1 = Image.open(file_path)
+        # قص الصورة الثانية إلى الحجم المطلوب
+        image1 = image1.resize((480,480))  # يتم تعيين الحجم بشكل افتراضي هنا
+
+        # الدمج
+        image1.paste(iconImage, (0, 0), iconImage)
+
+        # حفظ الصورة الناتجة
+        image1.save(file_path)
+
+
 if renameUser == "y" :
     reanameFilesImage()
+
+if iconUser == "y" :
+    addingIconImage()
 #############title################### 
 translator = Translator()
 for i in range(len(lang)):

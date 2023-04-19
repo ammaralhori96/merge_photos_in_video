@@ -6,11 +6,13 @@ from pywinauto.keyboard import send_keys
 lang=["ar","en","fr","es"]
 print(lang)
 langUser=int(input("Enter Languge Nam: "))
+videoUser=int(input("is video tybe enter 0: "))
 languagee=lang[langUser]
 titels=[]
 #2,3,4,2 ترتيب الحسابات والاخير هو العودة للحساب العربي
 #accountsXY=[(226,563),(224,695),(225,832),(226,563)]
-videoXY=[(763,442),(916,444),(1214,446),(1065,444),]
+
+videoXY=[(603,438),(752,445),(1036,444),(887,444),]
 def opiningApp(broserName):
     
     pyautogui.press("win")
@@ -40,9 +42,15 @@ with open('titleDesc\\youtubeTitle.txt', 'r', encoding="utf-8") as file:
     for title in titlelines:
         titels.append(title.strip())
         
-with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file:
-    desc=file.read()
 
+with open('first.txt', 'r', encoding='utf-8') as f1:
+    first = f1.read()
+with open('last.txt', 'r', encoding='utf-8') as f1:
+    last = f1.read()
+
+with open('titleDesc\\'+languagee+'.txt', 'r', encoding="utf-8") as file: 
+    desc=file.read()
+    desc=first +"\n"+ desc +"\n"+  last
 # print(titels)
 # print(desc)
 #time.sleep(10)
@@ -55,14 +63,18 @@ def uplodeVideo(videoXY):
     time.sleep(4)
     pyautogui.click(918,701) # اختيار الملفات
     time.sleep(1)
-    pyautogui.click(1021,275) # مربع المجلد
+    pyautogui.click(863,298) # مربع المجلد
     time.sleep(1)
     send_keys("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\output", pause=0.02)
     #pyautogui.write("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\output")
     time.sleep(3)
     pyautogui.press("Enter")
     time.sleep(3)
-    pyautogui.doubleClick(videoXY) # اختيار القيديو 
+    if videoUser==0:
+        pyautogui.doubleClick((1187,449)) # اختيار القيديو 
+    else:
+        pyautogui.doubleClick(videoXY) # اختيار القيديو 
+    
     time.sleep(15)
     pyautogui.click(1200,425)
     time.sleep(1)
@@ -70,7 +82,7 @@ def uplodeVideo(videoXY):
     time.sleep(2)
     pyautogui.click(1393,768)
     time.sleep(1)
-    pyautogui.click(1021,275) # مربع المجلد
+    pyautogui.click(863,298) # مربع المجلد
     time.sleep(1)
     send_keys("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\caverImage", pause=0.02)
     #pyautogui.write("C:\\Users\\ammar\\Desktop\\myCodes\\mergePhotos\\caverImage")
@@ -110,10 +122,13 @@ def uplodeVideo(videoXY):
     # pyautogui.click(653,805) #اغلاق
     # time.sleep(10)
 
-
 uplodeVideo(videoXY[langUser])
+
 # opiningApp("Edge")
 # for i in range(len(accountsXY)) :
 #     uplodeVideo(videoXY[i])
 #     choosingAccount(accountsXY[i])
 #     pass
+
+#import pyautogui 
+#pyautogui.mouseInfo()
